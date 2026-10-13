@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Freelancing Course Tracker</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f5fb;--card:#fff;--tx:#1b1d2e;--mu:#6b7090;--bd:#e3e5f1;--ac:#6366f1;--sh:0 4px 18px rgba(40,40,90,.08)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f1120;--card:#181b30;--tx:#eceefa;--mu:#9296b8;--bd:#272b47;--sh:0 4px 18px rgba(0,0,0,.4)}}
+:root[data-theme=dark]{--bg:#0f1120;--card:#181b30;--tx:#eceefa;--mu:#9296b8;--bd:#272b47;--sh:0 4px 18px rgba(0,0,0,.4)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.w{max-width:900px;margin:0 auto;padding:18px 14px 60px}
+.hero{background:linear-gradient(135deg,#6366f1,#8b5cf6 55%,#ec4899);color:#fff;border-radius:22px;padding:22px;box-shadow:var(--sh);display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.hero h1{margin:0;font-size:1.5rem}.hero p{margin:4px 0 0;opacity:.9;font-size:.9rem}
+.ring{position:relative;width:110px;height:110px;flex:none}
+.ring svg{transform:rotate(-90deg)}.ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:1.5rem}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.stats span{background:rgba(255,255,255,.18);padding:6px 12px;border-radius:99px;font-size:.82rem}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:12px 0 8px;display:flex;gap:8px;flex-wrap:wrap}
+input[type=search]{flex:1;min-width:150px;padding:10px 14px;border-radius:12px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font:inherit}
+button{font:inherit;cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:9px 13px;border-radius:12px}
+button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:thin}
+.chips button{white-space:nowrap;font-size:.82rem;padding:6px 12px;border-radius:99px}
+.mh{display:flex;align-items:center;gap:10px;margin:26px 0 10px}
+.mh i{width:10px;height:28px;border-radius:6px}.mh h2{margin:0;font-size:1.05rem;flex:1}.mh small{color:var(--mu)}
+.mp{height:6px;background:var(--bd);border-radius:9px;overflow:hidden;margin-bottom:10px}.mp div{height:100%;transition:width .3s}
+details{background:var(--card);border:1px solid var(--bd);border-radius:16px;margin-bottom:10px;box-shadow:var(--sh);overflow:hidden}
+summary{list-style:none;cursor:pointer;padding:13px 14px;display:flex;align-items:center;gap:12px}
+summary::-webkit-details-marker{display:none}
+.dn{flex:none;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-weight:700;color:#fff;font-size:.85rem;text-align:center;line-height:1}
+.dn small{display:block;font-size:.55rem;opacity:.85;font-weight:500}
+.ti{flex:1;min-width:0}.ti b{display:block;font-size:.95rem}.ti span{color:var(--mu);font-size:.78rem}
+.pc{font-size:.8rem;font-weight:600;color:var(--mu)}
+details.done{border-color:#22c55e}details.done .pc{color:#22c55e}
+ul{list-style:none;margin:0;padding:0 14px 12px}
+li label{display:flex;gap:12px;align-items:center;padding:9px 10px;border-radius:10px;cursor:pointer}
+li label:hover{background:var(--bg)}
+input[type=checkbox]{appearance:none;width:22px;height:22px;flex:none;border:2px solid var(--bd);border-radius:7px;display:grid;place-items:center;cursor:pointer;transition:.15s;margin:0;background:var(--card)}
+input[type=checkbox]:checked{background:var(--c,#6366f1);border-color:var(--c,#6366f1)}
+input[type=checkbox]:checked::after{content:"✓";color:#fff;font-size:14px;font-weight:700}
+li input:checked+span{text-decoration:line-through;color:var(--mu)}
+.all{margin:0 14px 12px;font-size:.78rem;padding:5px 10px}
+.empty{text-align:center;color:var(--mu);padding:40px}
+</style></head><body><div class="w">
+<div class="hero"><div class="ring"><svg width="110" height="110"><circle cx="55" cy="55" r="48" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="10"/><circle id="rc" cx="55" cy="55" r="48" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-dasharray="301.6" stroke-dashoffset="301.6" style="transition:.5s"/></svg><b id="rp">0%</b></div>
+<div><h1>Freelancing Course Tracker</h1><p>3 months · 600 hours · 75 days</p><div class="stats"><span id="s1"></span><span id="s2"></span><span id="s3"></span></div></div></div>
+<div class="bar"><input type="search" id="q" placeholder="Search topics…"><button data-f="all" class="on">All</button><button data-f="todo">Pending</button><button data-f="done">Done</button><button id="th" title="Theme">◐</button></div>
+<div class="chips" id="chips"></div>
+<div id="app"></div>
+<p style="text-align:center"><button id="rs">Reset progress</button></p>
+</div>
+<script>
+const M=[["Computer Office & Hardware","#6366f1",1,8],["Graphic Design","#ec4899",9,16],["WordPress","#0ea5e9",17,24],["Freelancing Marketplaces","#f59e0b",25,29],["Digital Marketing","#10b981",30,62],["AI in Marketing","#8b5cf6",63,66],["Video Editing","#ef4444",67,68],["Soft Skills","#14b8a6",69,71],["Communicative English","#f97316",72,75]];
+const D=[
+["Word: Beginner & Intermediate","Getting started;Editing text & formatting;Tables;Graphics;Styles & outlines;Advanced document formatting;Working efficiently"],
+["Word: Advanced","Document interactivity (forms, charts);References (TOC, index);Sharing & mail merge;Tables;Proofing, printing & exporting"],
+["Excel: Beginner","Getting started;Entering text & formulas;Modifying a worksheet;Functions;Formatting;Charts;Printing"],
+["Excel: Advanced","Advanced functions & formulas;Lookups & data tables;Data management & charting;Pivot tables & charts;Import / export data;Analytical tools (Goal Seek)"],
+["PowerPoint: Beginner & Advanced","Getting started;Editing slide content;Shapes;Tables & charts;Slide masters & transitions;Graphics & media;Customizing slide elements;Action buttons & equations"],
+["Operating Systems","OS basics;OS administration;Installing Windows 7 & 10"],
+["Hardware, Network & Printers","Core hardware troubleshooting;Laptop, printer & networking issues;Data recovery & backup;Printers & MFDs"],
+["Networking & Safety","TCP/IP & ports;Networking tools;Safety & operational procedures;Unit overview"],
+["Illustrator: Fundamentals","Intro to graphic design;Vector graphics fundamentals"],
+["Illustrator: Artwork","Creating artwork;Color concepts;Selecting & aligning objects"],
+["Illustrator: Shapes & Type","Creating & editing shapes;Working with type;Layers"],
+["Illustrator: Colors","Blending colors & shapes;Graphics materials;Professional presentation"],
+["Project 1","Raster to vector;Invoice template;Letterhead;Brochure layout;Logo design"],
+["Project 2","Desk & wall calendar;Product packaging;Certificate template;T-shirt design;Resume & cover letter;Landscape design"],
+["Photoshop: Fundamentals","Getting started;Color concepts;Special effects;Typing English & Bangla;Raster graphics"],
+["Photoshop: Tools","Working with images;Basic tools;Basic design & drawing;Image preparation;Organizing layers"],
+["Web Design & WordPress Basics","XAMPP / Local setup & install;Dashboard & folder structure;Posts vs pages;Categories, tags & media"],
+["Themes & Customization","Free & premium themes;Customizer & widgets;Child theme;Custom CSS;Customize a theme layout"],
+["Plugins & Functionality","SEO, security & performance plugins;Contact form;Elementor / Gutenberg;Build a homepage"],
+["Custom Post Types & Advanced","Custom post types;ACF custom fields;Menus & navigation;User roles;Blog layout project"],
+["WooCommerce","Install & configure;Simple, variable & digital products;Payment gateways;Shipping & tax;Build a small shop"],
+["Theme Development","Template hierarchy;index, style & functions.php;Header, footer, sidebar;Enqueue scripts;HTML to WP theme"],
+["Professional WordPress","User management;Multilingual & membership;AI-assisted blogging;Portfolio & business sites"],
+["WordPress Final Project","Project planning;Development;Testing (SEO, speed, security);Final presentation"],
+["Fiverr","What is freelancing;Create account;Service research;Gig creation;Client communication"],
+["Upwork","Create account;Catalogue creation;Proposals;Apply for jobs;Client communication"],
+["Freelancer.com","Create account;Project / contest creation;Bid on projects;Client communication"],
+["SEOClerk","Create account;Service research;Submit service;Client communication"],
+["Other Marketplaces","Kwork, Legiit, PeoplePerHour;Toptal, LinkedIn;WeWorkRemotely, BdJobs;Local marketing"],
+["Basic Digital Marketing","Intro & opportunities;Future of digital marketing;DM vs traditional"],
+["Niche Selection","What & why;Selection techniques & methods"],
+["Social Media Marketing","Types & importance of social media;Facebook business page creation;Page optimization"],
+["Facebook Marketing I","Meta Business Suite;Facebook Shop & Marketplace;Professional content;Automation"],
+["Facebook Marketing II","Ads Manager & business portfolio;Post boost;Ad types & setup;Events;Pixel setup"],
+["Facebook Marketing III","Lookalike & custom audiences;Facebook funnel;Strategy & plan"],
+["Instagram Marketing","Business profile & optimization;Hashtag research;Followers & engagement;Influencer research;Live practice"],
+["X (Twitter) Marketing","Profile optimization;Tweets & retweets;Hashtags & engagement;X Ads & analytics"],
+["LinkedIn Marketing I","Profile optimization;Marketing strategy;Connection planning;Company page"],
+["LinkedIn Marketing II","Business tools & Sales Navigator;Lead generation;Finding & posting jobs;LinkedIn Ads"],
+["Pinterest Marketing","Business profile;Strategy;Pins, boards & rich pins;Pinterest Ads"],
+["Quora Marketing","Profile & Quora space;Strategy;Posts, questions & answers"],
+["Reddit Marketing","Profile & strategy;Community posts & custom feed;Reddit ads"],
+["Lead Generation / Data Entry","What is a lead;Types: B2B & B2C;Yellow Pages / Maps / Yelp;Data scraping;Lead nurturing"],
+["Email Marketing I","Strategy;Mailchimp, Klaviyo, Brevo;HTML email templates"],
+["Email Marketing II","Subscribers & contact lists;Pop-up & sign-up forms;Campaigns;Tracking results"],
+["SEO Basics","Search engine algorithms;Types of SEO;Keywords & keyword research"],
+["Website Audit & Competitors","Audit report creation;Competitor research & plan;SEO tools"],
+["Keyword Research","Step-by-step research;Tools (Planner, Semrush, Ahrefs, Moz);Profitable keywords;Final selection"],
+["Content Writing with AI","SEO-friendly AI content;Tools (ChatGPT, Gemini, Grammarly);Tips & tricks"],
+["On-Page SEO I","Title & heading tags;Meta description & tags;Content optimization"],
+["On-Page SEO II","Image optimization;Internal / external links & permalinks;Yoast & RankMath"],
+["Off-Page SEO I","Backlinks & types;Profile backlinks;Blog comment backlinks"],
+["Off-Page SEO II","Social bookmarking;Wiki & forum backlinks;Q&A & guest posting"],
+["Technical SEO I","Page speed & usability;Robots.txt;Schema / structured data"],
+["Technical SEO II","Google Search Console;Bing Webmaster;Google Analytics;Tag Manager"],
+["Local SEO","Local SEO basics;Google 3-Pack;Google Business Profile;Map & local citations"],
+["SEM I","AdWords interface;Campaign quality;Billing & activation;Performance evaluation"],
+["SEM II","Keyword Planner;Search, Local & Display ads;Carousel, Demand Gen & Video ads"],
+["YouTube SEO","Create & optimize channel;Upload videos & Shorts;Ad content;VidIQ & TubeBuddy"],
+["Blogging","Blog goals & writing style;Growing audience;Blogging & SEO"],
+["AdSense & Affiliate","Google AdSense & Ezoic;Monetizing sites & apps;Affiliate account;Store setup & listings"],
+["Freelancing with Smartphone","Choosing a platform;Applying & managing work;Benefits & limitations;Micro-freelancing sites"],
+["AI in Marketing & Copywriting","Intro to AI & generative AI;AI tools overview;AI for copywriting & SEO;Prompt engineering"],
+["AI Content & Image Design","AI content structure & scripts;AI graphics & branding;Posters & banners;Ethical use of AI images"],
+["AI Video & Audio","Script-to-video & AI avatars;AI video editing;Short-form video;AI voiceover & music"],
+["AI Ads, Ethics & Capstone","AI in ads & analytics;Selling AI services;Ethics (deepfakes, copyright);Capstone campaign project"],
+["Video Editing Basics","Editing basics & formats;Filmora intro;Edit a short vlog;CapCut reel project"],
+["Professional Editing","Camtasia tutorial recording;Transitions & effects;Text, titles & subtitles;Audio & music editing"],
+["Teamwork & Work Values","Team roles & discussions;Job description & specification;Ethics & integrity"],
+["Housekeeping, Health & Safety","PPE & first aid;Workplace cleanliness;Organizing tools & materials;Standard work procedures"],
+["Workplace Manner","Manners with colleagues & clients;Respect & empathy;Responsibilities & SOP;Unit overview"],
+["Speaking & Client Communication","Vocabulary & public speaking;Introducing yourself;Client contact & expectations;Written communication"],
+["Client Negotiation","Rates, deadlines & deliverables;Feedback & revisions;Conflict resolution"],
+["Spoken English I","Hotel & directions;Buses & travel;Weather & sightseeing;Health, jobs & office talk"],
+["Spoken English II","Practical job talk;Public speaking;Exchanging views;Describing events & places;Computer & software terms"]];
+let S={},F="all",MF=-1,Q="";
+try{S=JSON.parse(localStorage.getItem("flct")||"{}")}catch(e){}
+const save=()=>{try{localStorage.setItem("flct",JSON.stringify(S))}catch(e){}};
+const $=s=>document.querySelector(s);
+const T=D.map(d=>d[1].split(";"));
+const mod=i=>M.findIndex(m=>i+1>=m[2]&&i+1<=m[3]);
+const cnt=i=>T[i].filter((_,j)=>S[i+"-"+j]).length;
+function render(){
+ const open=new Set([...document.querySelectorAll("details[open]")].map(e=>e.dataset.d));
+ let h="";
+ M.forEach((m,mi)=>{
+  if(MF>=0&&MF!==mi)return;
+  let body="",dn=0,tot=0;
+  for(let i=m[2]-1;i<m[3];i++){
+   const c=cnt(i),n=T[i].length;dn+=c;tot+=n;
+   const items=T[i].map((t,j)=>({t,j,k:S[i+"-"+j]})).filter(x=>(F=="all"||(F=="done")==!!x.k)&&(!Q||(x.t+" "+D[i][0]).toLowerCase().includes(Q)));
+   if(!items.length)continue;
+   const op=Q||open.has(""+i)?" open":"";
+   body+=`<details data-d="${i}" class="${c==n?"done":""}"${op}><summary><div class="dn" style="background:${m[1]}"><div><small>DAY</small>${i+1}</div></div><div class="ti"><b>${D[i][0]}</b><span>8 hours · ${n} topics</span></div><span class="pc">${c}/${n}</span></summary><ul>${items.map(x=>`<li><label><input type="checkbox" data-k="${i}-${x.j}" style="--c:${m[1]}"${x.k?" checked":""}><span>${x.t}</span></label></li>`).join("")}</ul><button class="all" data-a="${i}">${c==n?"Uncheck all":"Check all"}</button></details>`;
+  }
+  if(body)h+=`<div class="mh"><i style="background:${m[1]}"></i><h2>${m[0]}</h2><small>${dn}/${tot}</small></div><div class="mp"><div style="width:${tot?dn/tot*100:0}%;background:${m[1]}"></div></div>`+body;
+ });
+ $("#app").innerHTML=h||'<div class="empty">No topics match.</div>';
+ let a=0,t=0,hrs=0,dd=0;
+ D.forEach((_,i)=>{const c=cnt(i),n=T[i].length;a+=c;t+=n;hrs+=8*c/n;if(c==n)dd++});
+ const p=Math.round(a/t*100);
+ $("#rp").textContent=p+"%";$("#rc").style.strokeDashoffset=301.6*(1-a/t);
+ $("#s1").textContent=`✅ ${dd}/75 days done`;$("#s2").textContent=`⏱ ${Math.round(hrs)}/600 hours`;$("#s3").textContent=`📌 ${a}/${t} topics`;
+ $("#chips").innerHTML=`<button data-m="-1" class="${MF<0?"on":""}">All modules</button>`+M.map((m,i)=>`<button data-m="${i}" class="${MF===i?"on":""}">${m[0]}</button>`).join("");
+}
+document.addEventListener("change",e=>{const k=e.target.dataset.k;if(!k)return;e.target.checked?S[k]=1:delete S[k];save();render()});
+document.addEventListener("click",e=>{
+ const b=e.target.closest("button");if(!b)return;
+ if(b.dataset.f){F=b.dataset.f;document.querySelectorAll("[data-f]").forEach(x=>x.classList.toggle("on",x===b));render()}
+ else if(b.dataset.m){MF=+b.dataset.m;render()}
+ else if(b.dataset.a){const i=+b.dataset.a,all=cnt(i)==T[i].length;T[i].forEach((_,j)=>all?delete S[i+"-"+j]:S[i+"-"+j]=1);save();render()}
+ else if(b.id=="rs"&&confirm("Reset all progress?")){S={};save();render()}
+ else if(b.id=="th"){const r=document.documentElement,d=getComputedStyle(r).getPropertyValue("--bg").trim()=="#0f1120";r.dataset.theme=d?"light":"dark"}
+});
+$("#q").addEventListener("input",e=>{Q=e.target.value.trim().toLowerCase();render()});
+render();
+</script></body></html>
